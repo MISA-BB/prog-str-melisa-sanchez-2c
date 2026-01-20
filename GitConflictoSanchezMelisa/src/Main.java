@@ -12,7 +12,7 @@ public class Main {
         double subtotal = pedirDouble(scanner, "Ingresa el Subtotal de tu compra: ");
         double totalConIva = calcularTotalConIva(subtotal);
         double totalFinal = aplicarDescuentoSiAplica(totalConIva, subtotal);
-        System.out.printf("Total a pagar: %.2f%n", totalConIva);
+        System.out.printf("Total a pagar con Iva: %.2f%n", totalConIva);
         System.out.printf("Total a pagar: %.2f%n", totalFinal);
 
 
