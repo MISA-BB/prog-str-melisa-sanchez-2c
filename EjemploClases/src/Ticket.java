@@ -1,15 +1,14 @@
-
 public class Ticket {
 
     public Ticket(){
 
     }//Constructor por default
+
     private final double DESCUENTO = 0.10;
     private final double PRECIO = 10;
     public double subtotal;
     public double descuentoCalculado;
     public double total;
-
 
     public void process(int cantidad){
         calcularSubtotal(cantidad);
@@ -17,16 +16,15 @@ public class Ticket {
         calcularTotal();
     }
     private void calcularSubtotal(int cantidad){
-        this.subtotal=cantidad*PRECIO;
+        this.subtotal = cantidad*PRECIO;
     }
 
     private void calcularDescuento(){
         this.descuentoCalculado = this.subtotal*DESCUENTO;
-
     }
 
     private void calcularTotal(){
-        this.total = subtotal - this.descuentoCalculado;
+        this.total = this.subtotal - this.descuentoCalculado;
     }
 
     public void imprimirTicket(double cantidad){
