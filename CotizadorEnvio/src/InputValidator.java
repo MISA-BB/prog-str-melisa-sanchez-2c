@@ -1,28 +1,28 @@
 import java.util.Scanner;
 
-public class InputValidator {
-    public double leerDoubleEnRango(Scanner sc, String msg, double min, double max) {
-        double valor;
-        while (true) {
-            System.out.println(msg);
-            if (sc.hasNextDouble()) {
-                valor = sc.nextDouble();
-                if (valor >= min && valor <= max) {
-                    return valor;
-                }
-                System.out.println("el valor esta fuera de rango");
-            } else {
-                System.out.println("el valor no es numerico");
-                sc.next();
-            }
-        }
-    }
+                public class InputValidator {
+                    public double leerDoubleEnRango(Scanner sc, String msg, double min, double max) {
+                        double valor;
+                        while (true) {
+                            System.out.println(msg);
+                            if (sc.hasNextDouble()) {
+                                valor = sc.nextDouble();
+                                if (valor >= min && valor <= max) {
+                                    return valor;
+                                }
+                                System.out.println("el valor esta fuera de rango");
+                            } else {
+                                System.out.println("el valor no es numerico");
+                                sc.next();
+                            }
+                        }
+                    }
 
-    public int leerIntEnRango(Scanner sc, String msg, int min, int max) {
-        int valor;
-        while (true) {
-            System.out.println(msg);
-            if (sc.hasNextInt()) {
+                    public int leerIntEnRango(Scanner sc, String msg, int min, int max) {
+                        int valor;
+                        while (true) {
+                            System.out.println(msg);
+                            if (sc.hasNextInt()) {
                 valor = sc.nextInt();
                 if (valor >= min && valor <= max) {
                     return valor;
