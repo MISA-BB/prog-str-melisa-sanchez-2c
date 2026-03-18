@@ -31,6 +31,17 @@ public class AppController {
     @FXML
     public void initialize(){
         listView.setItems(data);
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                (observable,odlValue,newValue)->{
+                    if(newValue!=null){
+                        String[] parts = newValue.split("-");
+                        txtName.setText(parts[0]);
+                        txtEmail.setText(parts[1]);
+                        txtEdad.setText(parts[2]);
+                    }
+
+                }
+        );
         loadFromFile();
     }
 
@@ -55,14 +66,57 @@ public class AppController {
             loadFromFile();
 
         } catch (IOException e) {
-            lblMsg.setText("es error de archivo" + e.getMessage());
+            lblMsg.setText("es error de archivo: " + e.getMessage());
             lblMsg.setStyle("-fx-text-fill: red");
         } catch (IllegalArgumentException e) {
-            lblMsg.setText("es error de datos"+ e.getMessage());
+            lblMsg.setText("es error de datos: "+ e.getMessage());
             lblMsg.setStyle("-fx-text-fill: red");
 
         }
     }
+
+    @FXML
+    public void  onUpdate(){
+        try{
+            int index  = listView.getSelectionModel().getSelectedIndex();
+            String name = txtName.getText();
+            String email = txtEmail.getText();
+            String edad = txtEdad.getText();
+            service.updatePerson(index, name, email,edad);
+            loadFromFile();
+            txtName.clear();
+            txtEmail.clear();
+            txtEdad.clear();
+            lblMsg.setText("se actualizo el registro correctamente");
+        } catch (IOException e) {
+            lblMsg.setText("hubo un error en el archivo");
+            throw new RuntimeException(e);
+        } catch (IllegalArgumentException error){
+            lblMsg.setText("hubo un error con los datos");
+        }
+    }
+
+    @FXML
+    public void  onDelete(){
+        try{
+            int index  = listView.getSelectionModel().getSelectedIndex();
+            String name = txtName.getText();
+            String email = txtEmail.getText();
+            String edad = txtEdad.getText();
+            service.deletePerson(index);
+            loadFromFile();
+            txtName.clear();
+            txtEmail.clear();
+            txtEdad.clear();
+            lblMsg.setText("se elimino el registro correctamente");
+        } catch (IOException e) {
+            lblMsg.setText("hubo un error en el archivo");
+            throw new RuntimeException(e);
+        } catch (IllegalArgumentException error){
+            lblMsg.setText("hubo un error con los datos");
+        }
+    }
+
 
     private void loadFromFile(){
         try{

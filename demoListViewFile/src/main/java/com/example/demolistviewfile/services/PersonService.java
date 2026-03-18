@@ -25,6 +25,37 @@ public class PersonService {
         return result;
     }
 
+        public void updatePerson(int index, String nombre, String email, String age) throws IOException {
+        validate(nombre, email, age);
+        List<String> listaOriginal=repo.readAllLines();
+        List<String> cleanLines = new ArrayList<>();
+        for (String line : listaOriginal){
+            if(line != null && !line.isBlank()){
+                cleanLines.add(line); // esta linea es buena, ya que no es null y no esta en blanco
+
+            }
+        }
+        cleanLines.set(index,nombre+","+email+","+age);
+        repo.savefile(cleanLines); // sustituir la informacion en el archivo actualizada
+
+
+        }
+    public void deletePerson(int index) throws IOException {
+
+        List<String> listaOriginal=repo.readAllLines();
+        List<String> cleanLines = new ArrayList<>();
+        for (String line : listaOriginal){
+            if(line != null && !line.isBlank()){
+                cleanLines.add(line);
+
+            }
+        }
+        cleanLines.remove(index);
+        repo.savefile(cleanLines); // sustituir la informacion en el archivo actualizada
+
+
+    }
+
     public void addPerson(String name, String email, String edad) throws IOException {
         validate(name,email,edad);
         repo.addNewLine(name+","+email+","+edad);
@@ -48,14 +79,8 @@ public class PersonService {
             if ( newNumber < 0){
                 throw new IllegalArgumentException("numero invalido");
             }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("no se pudo convertir el numero ");
+        } catch (NumberFormatException e) { //correjido bro
+            throw new IllegalArgumentException("datos invalidos ");
         }
-
-
-
-
-
-
     }
 }
