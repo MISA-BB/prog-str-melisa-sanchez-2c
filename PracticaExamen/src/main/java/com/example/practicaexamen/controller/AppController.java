@@ -26,7 +26,7 @@ public class AppController {
     private ListView<Contacto> list;
    private ObservableList<Contacto> listaContacto = FXCollections.observableArrayList();
 
-   private ObservableList<Contacto> listaParentesco= FXCollections.observableArrayList();
+
    private List<Contacto>  contactos = new ArrayList<>();
 
    private final String[]parentesco = {
@@ -63,74 +63,90 @@ public class AppController {
        listaContacto.setAll(contactos);
        list.setItems(listaContacto);
    }
-   @FXML
-    public void onAgregar(){
-       System.out.println("holaaa");
-       String name  = txtNombre.getText().trim();
-       String number = txtTelefono.getText().trim();
-       String id = opc.getValue();
 
-       contactos.add(new Contacto(name, number,id));
-       listaContacto.setAll(contactos);
-       list.setItems(listaContacto);
-       System.out.println(contactos);
-
-   }
-
-
-   @FXML
-    public void onActualizar (){
-       String name  = txtNombre.getText().trim();
-       String number = txtTelefono.getText().trim();
-       String id = opc.getValue();
-       boolean encontrado = false;
-       for (int i = 0; i < contactos.size(); i++) {
-           if (contactos.get(i).getName().equalsIgnoreCase(name)) {
-
-               contactos.set(i, new Contacto(name, number, id));
-               encontrado = true;
-               break;
-           }
-       }
-       if (encontrado) {
-           actualizarList();
-           System.out.println("¡Contacto actualizado!");
-       } else {
-           System.out.println("Error: No se encontró un contacto con ese nombre.");
-       }
-
-
-   }
 
     @FXML
-    public void onBuscar() {
-        String nombreBusqueda = txtNombre.getText().trim();
+    public void onAgregar() {
+        String name = txtNombre.getText().trim();
+        String number = txtTelefono.getText().trim();
+        String parentesco = opc.getValue();
 
-        if (nombreBusqueda.isEmpty()) {
-            System.out.println("Escribe un nombre para buscar.");
+        if (name.isEmpty() || number.isEmpty() || parentesco == null) {
+            new Alert(Alert.AlertType.WARNING, "Por favor, llena todos los campos.").show();
+            return;
+        }
+
+        if (number.length() != 10) {
+            new Alert(Alert.AlertType.ERROR, "El teléfono debe tener exactamente 10 dígitos.").show();
+            return;
+        }
+
+        for (Contacto c : contactos) {
+            if (c.getName().equalsIgnoreCase(name)) {
+                new Alert(Alert.AlertType.ERROR, "Este nombre ya está registrado.").show();
+                return;
+            }
+        }
+
+        contactos.add(new Contacto(name, number, parentesco));
+        actualizarList();
+        onLimpiar();
+
+        new Alert(Alert.AlertType.INFORMATION, "Contacto guardado correctamente").show();
+    }
+
+    @FXML
+    public void onActualizar() {
+        String name = txtNombre.getText().trim();
+        String number = txtTelefono.getText().trim();
+        String parentesco = opc.getValue();
+
+        if (name.isEmpty() || number.isEmpty() || parentesco == null) {
+            new Alert(Alert.AlertType.WARNING, "Faltan datos para actualizar.").show();
+            return;
+        }
+
+        if (number.length() != 10) {
+            new Alert(Alert.AlertType.ERROR, "El teléfono debe tener 10 dígitos.").show();
             return;
         }
 
         boolean encontrado = false;
 
+        for (int i = 0; i < contactos.size(); i++) {
+            if (contactos.get(i).getName().equalsIgnoreCase(name)) {
+                contactos.set(i, new Contacto(name, number, parentesco));
+                encontrado = true;
+                actualizarList();
+                break;
+            }
+        }
+
+        if (encontrado) {
+            new Alert(Alert.AlertType.INFORMATION, "¡Contacto actualizado con éxito!").show();
+            onLimpiar();
+        } else {
+            new Alert(Alert.AlertType.ERROR, "No se encontró el contacto '" + name + "'.").show();
+        }
+    }
+    @FXML
+    public void onBuscar() {
+        String nombreBusqueda = txtNombre.getText().trim();
+        boolean encontrado = false;
+
         for (Contacto c : contactos) {
             if (c.getName().equalsIgnoreCase(nombreBusqueda)) {
-
-
                 txtNombre.setText(c.getName());
                 txtTelefono.setText(c.getNumber());
                 opc.setValue(c.getId());
-
                 encontrado = true;
-                System.out.println("Contacto encontrado.");
                 break;
             }
         }
 
         if (!encontrado) {
-            System.out.println("Error: El contacto '" + nombreBusqueda + "' no existe.");
-            txtTelefono.clear();
-            opc.setValue(null);
+            // Alerta de no encontrado
+            new Alert(Alert.AlertType.ERROR, "No se encontró ningún contacto con ese nombre.").show();
         }
     }
 
@@ -138,24 +154,16 @@ public class AppController {
     public void onEliminar() {
         String nombreAEliminar = txtNombre.getText().trim();
 
-        if (nombreAEliminar.isEmpty()) {
-            System.out.println("Error: Escribe el nombre del contacto a eliminar.");
-            return;
-        }
-
-        boolean eliminado = contactos.removeIf(contacto ->
-                contacto.getName().equalsIgnoreCase(nombreAEliminar)
-        );
+        boolean eliminado = contactos.removeIf(c -> c.getName().equalsIgnoreCase(nombreAEliminar));
 
         if (eliminado) {
             actualizarList();
             onLimpiar();
-            System.out.println("Contacto '" + nombreAEliminar + "' eliminado correctamente.");
+            new Alert(Alert.AlertType.INFORMATION, "Contacto eliminado con éxito.").show();
         } else {
-            System.out.println("Error: No se encontró ningún contacto con ese nombre.");
+            new Alert(Alert.AlertType.ERROR, "No se pudo eliminar: El nombre no existe.").show();
         }
     }
-
     @FXML
     public void onLimpiar() {
         txtNombre.clear();

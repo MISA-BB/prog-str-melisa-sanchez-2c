@@ -42,4 +42,9 @@ public class Contacto {
     public String toString() {
         return String.format("%-15s | %-10s | %s", name, number, id);
     }
+
+
+
 }
+
+
