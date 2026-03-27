@@ -3,6 +3,7 @@ public class Contacto {
     private String name;
     private String number;
     private String id;
+    //Hola
     public Contacto (String name, String number, String id){
         this.name = name;
         this.number = number;
